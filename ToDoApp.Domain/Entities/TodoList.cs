@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ToDoApp.Domain.Enums;
 
 namespace ToDoApp.Domain.Entities
 {
@@ -13,6 +15,8 @@ namespace ToDoApp.Domain.Entities
 		public string? UserName { get; set; }
 		public int UserID { get; set; }
 		public DateTime Created_Date { get; set; }
-		public List<TodoItem> Items { get; set; } = new();
+        public string? IconPath { get; set; }
+		public ThemeColor Theme  { get; set; }
+        public List<TodoItem> Items { get; set; } = new();
 	}
 }
