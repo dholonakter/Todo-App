@@ -6,7 +6,5 @@ using System.Threading.Tasks;
 
 namespace ToDoApp.Domain.Enums
 {
-
-    public enum PriorityType { Low, Medium, High };
-	
+	public enum PriorityType { Low, Medium, High };
 }
