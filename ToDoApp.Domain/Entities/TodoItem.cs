@@ -16,8 +16,8 @@ namespace ToDoApp.Domain.Entities
 		public List<string>? Steps { get; set; }
 		public PriorityType? Priority { get; set; }
 		public bool IsCompleted { get; set; }
-        public bool IsImportant { get; set; }
-        public int TodoListId { get; set; }
-        public TodoList TodoList { get; set; }
-    }
+		public bool IsImportant { get; set; }
+		public int TodoListId { get; set; }
+		public TodoList TodoList { get; set; }
+	}
 }

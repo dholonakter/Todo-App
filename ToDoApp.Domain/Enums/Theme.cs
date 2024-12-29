@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace ToDoApp.Domain.Enums
 {
-	public enum ThemeColor { red,  green, blue, yellow}
+	public enum ThemeColor { red, green, blue, yellow }
 }
