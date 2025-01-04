@@ -13,27 +13,27 @@ namespace Todo.Application.Services;
 public class TodoService : ITodoService
 {
 
-	private List<TodoList> _todolist=new List<TodoList>();
-	private List<Group> _grouplist=new List<Group>();
+	private List<TodoList> _todolist = new List<TodoList>();
+	private List<Group> _grouplist = new List<Group>();
 
 
 	public void CreateANewList(int list_id, string Name)
 	{
-		TodoList list=new TodoList { ID= list_id, Title = Name,  };
+		TodoList list = new TodoList { ID = list_id, Title = Name, };
 		_todolist.Add(list);
 	}
 
 	public void CreateANewGroup(int group_id, string Name)
 	{
 		Group group = new Group { ID = group_id, Name = Name, };
-	    _grouplist.Add(group);
+		_grouplist.Add(group);
 	}
 	public void AddListToAGroup(int group_id, int list_id)
 	{
 		Group found_group = null;
 		foreach (var group in _grouplist)
 		{
-			if(group.ID == group_id)
+			if (group.ID == group_id)
 			{
 				found_group = group;
 
@@ -51,13 +51,13 @@ public class TodoService : ITodoService
 		}
 		else
 		{
-			throw new NotImplementedException();
+			throw new Exception("Group with ID" + group_id + "not found");
 
 		}
 
 	}
 
-	public void AddTodoItemTotheList( int list_id,int id,string name, DateTime date_created, List<string> _steps, PriorityType? _priority, bool _isCompleted, bool _isImportant)
+	public void AddTodoItemTotheList(int list_id, TodoItem todoItem)
 	{
 		TodoList found_todolist = null;
 		foreach (var list in _todolist)
@@ -65,25 +65,25 @@ public class TodoService : ITodoService
 			if (list.ID == list_id)
 			{
 				found_todolist = list;
+				break;
 			}
 		}
 		if (found_todolist != null)
 		{
-			TodoItem item =new TodoItem { ID=id, Name=name, DateCreated=date_created, IsCompleted=_isCompleted, IsImportant=_isImportant};
-			found_todolist.Items.Add(item);
+			found_todolist.Items.Add(todoItem);
 		}
 		else
 		{
-			throw new NotImplementedException();
+			throw new Exception("TodoList with ID" + list_id + "not found");
 
 		}
 
 	}
-	public void UpdateTodoListName(int list_id,string title)
+	public void UpdateTodoListName(int list_id, string title)
 	{
 		TodoList found_todolist = null;
-        foreach (var list in _todolist)
-        {
+		foreach (var list in _todolist)
+		{
 
 			if (list.ID == list_id)
 			{
@@ -96,7 +96,7 @@ public class TodoService : ITodoService
 		}
 		else
 		{
-			throw new NotImplementedException();
+			throw new Exception("TodoList with ID" + list_id + "not found");
 
 		}
 	}
@@ -123,7 +123,7 @@ public class TodoService : ITodoService
 		}
 		else
 		{
-			throw new NotImplementedException();
+			throw new Exception("TodoList with ID" + list_id + "not found");
 
 		}
 	}
@@ -143,7 +143,10 @@ public class TodoService : ITodoService
 		{
 			_todolist.Remove(found_todolist);
 		}
-		else { throw new NotImplementedException(); }
+		else
+		{
+			throw new Exception("TodoList with ID" + id + "not found");
+		}
 	}
 	public void DeleteTodoItem(int list_id, int item_id)
 	{
@@ -168,7 +171,7 @@ public class TodoService : ITodoService
 		}
 		else
 		{
-			throw new NotImplementedException();
+			throw new Exception("TodoList with ID" + list_id + "not found");
 
 		}
 
