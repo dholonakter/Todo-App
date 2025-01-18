@@ -30,23 +30,15 @@ public class TodoService : ITodoService
 	}
 	public void AddListToAGroup(int group_id, int list_id)
 	{
-		Group found_group = null;
-		foreach (var group in _grouplist)
-		{
-			if (group.ID == group_id)
-			{
-				found_group = group;
+		var found_group = _grouplist.FirstOrDefault(x => x.ID == group_id);
 
-			}
-		}
 		if (found_group != null)
 		{
-			foreach (var list in found_group.TodoLists)
+			var list = _todolist.FirstOrDefault(x => x.ID == list_id);
+			if (list != null)
 			{
-				if (list.ID == list_id)
-				{
-					found_group.TodoLists.Add(list);
-				}
+				found_group.TodoLists.Add(list);
+
 			}
 		}
 		else
@@ -59,15 +51,8 @@ public class TodoService : ITodoService
 
 	public void AddTodoItemTotheList(int list_id, TodoItem todoItem)
 	{
-		TodoList found_todolist = null;
-		foreach (var list in _todolist)
-		{
-			if (list.ID == list_id)
-			{
-				found_todolist = list;
-				break;
-			}
-		}
+		var found_todolist = _todolist.FirstOrDefault(x => x.ID == list_id);
+
 		if (found_todolist != null)
 		{
 			found_todolist.Items.Add(todoItem);
@@ -81,15 +66,8 @@ public class TodoService : ITodoService
 	}
 	public void UpdateTodoListName(int list_id, string title)
 	{
-		TodoList found_todolist = null;
-		foreach (var list in _todolist)
-		{
+		var found_todolist = _todolist.FirstOrDefault(x => x.ID == list_id);
 
-			if (list.ID == list_id)
-			{
-				found_todolist = list;
-			}
-		}
 		if (found_todolist != null)
 		{
 			found_todolist.Title = title;
@@ -102,23 +80,15 @@ public class TodoService : ITodoService
 	}
 	public void UpdateItemtoList(int list_id, int item_Id, string itemName)
 	{
-		TodoList found_todolist = null;
-		foreach (var list in _todolist)
-		{
+		var found_todolist = _todolist.FirstOrDefault(x => x.ID == list_id);
 
-			if (list.ID == list_id)
-			{
-				found_todolist = list;
-			}
-		}
 		if (found_todolist != null)
 		{
-			foreach (var item in found_todolist.Items)
+			var getItem = found_todolist.Items.Find(x => x.ID == item_Id);
+			if (getItem != null)
 			{
-				if (item.ID == item_Id)
-				{
-					item.Name = itemName;
-				}
+				getItem.Name = itemName;
+
 			}
 		}
 		else
@@ -130,15 +100,7 @@ public class TodoService : ITodoService
 
 	public void DeleteTodoList(int id)
 	{
-		TodoList found_todolist = null;
-		foreach (var list in _todolist)
-		{
-
-			if (list.ID == id)
-			{
-				found_todolist = list;
-			}
-		}
+		var found_todolist = _todolist.FirstOrDefault(x => x.ID == id);
 		if (found_todolist != null)
 		{
 			_todolist.Remove(found_todolist);
@@ -150,24 +112,16 @@ public class TodoService : ITodoService
 	}
 	public void DeleteTodoItem(int list_id, int item_id)
 	{
-		TodoList found_todolist = null;
-		foreach (var list in _todolist)
-		{
-
-			if (list.ID == list_id)
-			{
-				found_todolist = list;
-			}
-		}
+		var found_todolist = _todolist.FirstOrDefault(x => x.ID == list_id);
 		if (found_todolist != null)
 		{
-			foreach (var item in found_todolist.Items)
+			var getItem = found_todolist.Items.Find(x => x.ID == item_id);
+			if (getItem != null)
 			{
-				if (item.ID == item_id)
-				{
-					found_todolist.Items.Remove(item);
-				}
+				found_todolist.Items.Remove(getItem);
+
 			}
+
 		}
 		else
 		{
