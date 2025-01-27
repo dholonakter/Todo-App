@@ -17,17 +17,31 @@ public class TodoService : ITodoService
 	private List<Group> _grouplist = new List<Group>();
 
 
-	public void CreateANewList(int list_id, string Name)
+	public void CreateANewList(string Name)
 	{
-		TodoList list = new TodoList { ID = list_id, Title = Name, };
+
+		TodoList list = new TodoList { Title = Name };
 		_todolist.Add(list);
+
+
 	}
 
-	public void CreateANewGroup(int group_id, string Name)
+
+	public void CreateANewGroup(string Name)
 	{
-		Group group = new Group { ID = group_id, Name = Name, };
+		Group group = new Group { Name = Name, };
 		_grouplist.Add(group);
 	}
+
+	public List<TodoList> GetAllList()
+	{
+		return _todolist;
+	}
+	public List<Group> GetAllGroups()
+	{
+		return _grouplist;
+	}
+
 	public void AddListToAGroup(int group_id, int list_id)
 	{
 		var found_group = _grouplist.FirstOrDefault(x => x.ID == group_id);

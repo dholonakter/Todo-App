@@ -5,8 +5,10 @@ namespace Todo.Application.Contracts;
 
 public interface ITodoService
 {
-	public void CreateANewList(int list_id, string Name);
-	public void CreateANewGroup(int group_id, string Name);
+	public void CreateANewList(string Name);
+	public void CreateANewGroup(string Name);
+	public List<TodoList> GetAllList();
+	public List<Group> GetAllGroups();
 	public void AddTodoItemTotheList(int list_id,TodoItem todoItem);
 	public void UpdateTodoListName(int id, string name);
 	public void UpdateItemtoList(int listID, int itemId, string itemName);
