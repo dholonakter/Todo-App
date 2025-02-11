@@ -12,7 +12,7 @@ public class TodoItem
 {
 	public int ID { get; set; }
 	public required string Name { get; set; }
-	public DateTime DateCreated { get; set; }=DateTime.Now;
+	public DateTime DateCreated { get; set; } = DateTime.Now;
 	public List<string>? Steps { get; set; }
 	public PriorityType? Priority { get; set; }
 	public bool IsCompleted { get; set; }

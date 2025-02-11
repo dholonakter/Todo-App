@@ -15,60 +15,56 @@ namespace TodoApp.Api.Controllers
 		{
 			_todoService = todoService;
 		}
-		[HttpPost("PostTodoList")]
-		public void PostTodoList(string name)
+		[HttpPost("api/todo")]
+		public IActionResult PostTodoList(string name)
 		{
-			try
+			if (string.IsNullOrEmpty(name))
+			{
+				return BadRequest();
+			}
+			else
 			{
 				_todoService.CreateANewList(name);
-				Ok("TodoList created successfully.");
+
+				return Ok("TodoList created successfully.");
 			}
-			catch (Exception ex)
-			{
-				BadRequest(ex.Message);
-			}
+
 		}
-		[HttpPost("PostNewGroup")]
-		public void PostNewGroup(string name)
+
+
+		[HttpPost("api/group")]
+		public IActionResult PostNewGroup(string name)
 		{
-			try
+			if (!string.IsNullOrEmpty(name))
 			{
 				_todoService.CreateANewGroup(name);
-				Ok("Group created successfully.");
+				return Ok("Group created successfully.");
 			}
-			catch (Exception ex)
+			else
 			{
-				BadRequest(ex.Message);
+				return BadRequest();
 			}
+
 		}
 
-		[HttpGet]
+		[HttpGet("api/todo")]
 		public List<TodoList> GetList()
 		{
-			try
-			{
-				var lists = _todoService.GetAllList();
-				return lists;
-			}
-
-			catch (Exception ex)
-			{
-				return new List<TodoList>();
-			}
+			var lists = _todoService.GetAllList();
+			return lists;
 		}
 
 
-		[HttpDelete]
-		public void deletelist(int id)
+		[HttpDelete("api/todo/{id}")]
+		public void deletelist([FromRoute] int id)
 		{
-			try
+			if (id > 0)
 			{
 				_todoService.DeleteTodoList(id);
 				Ok("deleted list successfully.");
 			}
-			catch (Exception ex)
 			{
-				BadRequest(ex.Message);
+				NoContent();
 			}
 		}
 	}

@@ -15,21 +15,21 @@ public class TodoService : ITodoService
 
 	private List<TodoList> _todolist = new List<TodoList>();
 	private List<Group> _grouplist = new List<Group>();
+	private static int current_id;
 
 
 	public void CreateANewList(string Name)
 	{
-
-		TodoList list = new TodoList { Title = Name };
+		var newId = Interlocked.Increment(ref current_id);
+		TodoList list = new TodoList { ID = newId, Title = Name };
 		_todolist.Add(list);
-
-
 	}
 
 
 	public void CreateANewGroup(string Name)
 	{
-		Group group = new Group { Name = Name, };
+		var newId = Interlocked.Increment(ref current_id);
+		Group group = new Group { ID = newId, Name = Name };
 		_grouplist.Add(group);
 	}
 
