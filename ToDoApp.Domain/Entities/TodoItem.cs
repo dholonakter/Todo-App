@@ -10,7 +10,7 @@ namespace ToDoApp.Domain.Entities;
 
 public class TodoItem
 {
-	public int ID { get; set; }
+	public Guid ID { get; set; }
 	public required string Name { get; set; }
 	public DateTime DateCreated { get; set; } = DateTime.Now;
 	public List<string>? Steps { get; set; }

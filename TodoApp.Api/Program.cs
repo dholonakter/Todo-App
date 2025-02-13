@@ -14,7 +14,7 @@ namespace TodoApp.Api
 			// Add services to the container.
 
 			builder.Services.AddControllers();
-			builder.Services.AddTransient<ITodoService, TodoService>();
+			builder.Services.AddSingleton<ITodoService, TodoService>();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
@@ -31,7 +31,6 @@ namespace TodoApp.Api
 			app.UseHttpsRedirection();
 
 			app.UseAuthorization();
-
 
 			app.MapControllers();
 

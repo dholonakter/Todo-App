@@ -13,23 +13,25 @@ namespace Todo.Application.Services;
 public class TodoService : ITodoService
 {
 
-	private List<TodoList> _todolist = new List<TodoList>();
+	private List<TodoList> _todolist = new List<TodoList>()
+	{
+		new TodoList{ID=Guid.NewGuid(),Title="p"},
+		new TodoList {ID=Guid.NewGuid(),Title="px"}
+	};
 	private List<Group> _grouplist = new List<Group>();
-	private static int current_id;
 
+	
 
 	public void CreateANewList(string Name)
 	{
-		var newId = Interlocked.Increment(ref current_id);
-		TodoList list = new TodoList { ID = newId, Title = Name };
+		TodoList list = new TodoList { ID =Guid.NewGuid() , Title = Name };
 		_todolist.Add(list);
 	}
 
 
 	public void CreateANewGroup(string Name)
 	{
-		var newId = Interlocked.Increment(ref current_id);
-		Group group = new Group { ID = newId, Name = Name };
+		Group group = new Group { ID=Guid.NewGuid(), Name = Name };
 		_grouplist.Add(group);
 	}
 
@@ -42,7 +44,7 @@ public class TodoService : ITodoService
 		return _grouplist;
 	}
 
-	public void AddListToAGroup(int group_id, int list_id)
+	public void AddListToAGroup(Guid group_id, Guid list_id)
 	{
 		var found_group = _grouplist.FirstOrDefault(x => x.ID == group_id);
 
@@ -63,7 +65,7 @@ public class TodoService : ITodoService
 
 	}
 
-	public void AddTodoItemTotheList(int list_id, TodoItem todoItem)
+	public void AddTodoItemTotheList(Guid list_id, TodoItem todoItem)
 	{
 		var found_todolist = _todolist.FirstOrDefault(x => x.ID == list_id);
 
@@ -78,7 +80,7 @@ public class TodoService : ITodoService
 		}
 
 	}
-	public void UpdateTodoListName(int list_id, string title)
+	public void UpdateTodoListName(Guid list_id, string title)
 	{
 		var found_todolist = _todolist.FirstOrDefault(x => x.ID == list_id);
 
@@ -92,7 +94,7 @@ public class TodoService : ITodoService
 
 		}
 	}
-	public void UpdateItemtoList(int list_id, int item_Id, string itemName)
+	public void UpdateItemtoList(Guid list_id, Guid item_Id, string itemName)
 	{
 		var found_todolist = _todolist.FirstOrDefault(x => x.ID == list_id);
 
@@ -112,7 +114,7 @@ public class TodoService : ITodoService
 		}
 	}
 
-	public void DeleteTodoList(int id)
+	public void DeleteTodoList(Guid id)
 	{
 		var found_todolist = _todolist.FirstOrDefault(x => x.ID == id);
 		if (found_todolist != null)
@@ -121,10 +123,10 @@ public class TodoService : ITodoService
 		}
 		else
 		{
-			throw new Exception("TodoList with ID" + id + "not found");
+			throw new Exception("TodoList with ID" + id + " not found");
 		}
 	}
-	public void DeleteTodoItem(int list_id, int item_id)
+	public void DeleteTodoItem(Guid list_id, Guid item_id)
 	{
 		var found_todolist = _todolist.FirstOrDefault(x => x.ID == list_id);
 		if (found_todolist != null)

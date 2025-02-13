@@ -15,12 +15,13 @@ namespace TodoApp.Api.Controllers
 		{
 			_todoService = todoService;
 		}
+
 		[HttpPost("api/todo")]
 		public IActionResult PostTodoList(string name)
 		{
 			if (string.IsNullOrEmpty(name))
 			{
-				return BadRequest();
+				return BadRequest("Name can not be empty");
 			}
 			else
 			{
@@ -35,37 +36,41 @@ namespace TodoApp.Api.Controllers
 		[HttpPost("api/group")]
 		public IActionResult PostNewGroup(string name)
 		{
-			if (!string.IsNullOrEmpty(name))
+			if (string.IsNullOrEmpty(name))
 			{
-				_todoService.CreateANewGroup(name);
-				return Ok("Group created successfully.");
+				return BadRequest("Name can not be empty");
+
 			}
 			else
 			{
-				return BadRequest();
+				_todoService.CreateANewGroup(name);
+				return Ok("Group created successfully.");
 			}
 
 		}
 
 		[HttpGet("api/todo")]
-		public List<TodoList> GetList()
+		public ActionResult<List<TodoList>> GetList()
 		{
 			var lists = _todoService.GetAllList();
-			return lists;
+			if(lists==null || !lists.Any())
+			{
+				return NoContent();
+			}
+			return Ok(lists);
 		}
 
 
 		[HttpDelete("api/todo/{id}")]
-		public void deletelist([FromRoute] int id)
+		public IActionResult DeletedList([FromRoute] Guid id)
 		{
-			if (id > 0)
+			if (id==Guid.Empty)
 			{
-				_todoService.DeleteTodoList(id);
-				Ok("deleted list successfully.");
+				return BadRequest("Invalid ID");
 			}
-			{
-				NoContent();
-			}
+			_todoService.DeleteTodoList(id);
+			return Ok("deleted list successfully.");
+
 		}
 	}
 }

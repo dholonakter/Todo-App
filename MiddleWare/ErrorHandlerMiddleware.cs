@@ -29,7 +29,7 @@ namespace MiddleWare
 		}
 		private async Task HandleExceptionAsync(HttpContext context, Exception ex)
 		{
-			_logger.LogError(ex, "An uxpected error occured");
+			_logger.LogError(ex, "An unexpected error occured");
 			context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 			context.Response.ContentType = "application/json";
 			await context.Response.WriteAsync("{\"message\": \"An internal server error occurred.\"}");

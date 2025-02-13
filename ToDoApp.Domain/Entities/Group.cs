@@ -8,7 +8,7 @@ namespace ToDoApp.Domain.Entities;
 
 public class Group
 {
-	public int ID { get; set; }
+	public Guid ID { get; set; }
 	public required string Name { get; set; }
 	public List<TodoList> TodoLists { get; set; } = new();
 
