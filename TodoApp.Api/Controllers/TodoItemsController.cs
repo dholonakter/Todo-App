@@ -6,7 +6,7 @@ using ToDoApp.Domain.Entities;
 
 namespace TodoApp.Api.Controllers
 {
-	[Route("api/[controller]")]
+	[Route("api/")]
 	[ApiController]
 	public class TodoItemsController : ControllerBase
 	{
@@ -16,27 +16,41 @@ namespace TodoApp.Api.Controllers
 			_todoService = todoService;
 		}
 
-		[HttpPost("api/todo")]
+		[HttpPost("todo")]
 		public IActionResult PostTodoList(string name)
 		{
-			if (string.IsNullOrEmpty(name))
+			if (name == null)
 			{
 				return BadRequest("Name can not be empty");
 			}
 			else
 			{
-				_todoService.CreateANewList(name);
 
-				return Ok("TodoList created successfully.");
+				_todoService.CreateANewList(name);
+				return Ok("Todo List created successfully");
+
 			}
 
 		}
 
 
-		[HttpPost("api/group")]
+		[HttpPatch("additem/{listId}")]
+		public IActionResult PostItem(Guid listId, [FromBody] TodoItem item)
+		{
+			if (item.Name == String.Empty)
+			{
+				return BadRequest("Name is required");
+			}
+			item.TodoListId = listId;
+			_todoService.AddTodoItemTotheList(listId, item);
+			return Ok("A item has been added to the list");
+		}
+
+
+		[HttpPost("group")]
 		public IActionResult PostNewGroup(string name)
 		{
-			if (string.IsNullOrEmpty(name))
+			if (name is null)
 			{
 				return BadRequest("Name can not be empty");
 
@@ -49,11 +63,11 @@ namespace TodoApp.Api.Controllers
 
 		}
 
-		[HttpGet("api/todo")]
+		[HttpGet("todo")]
 		public ActionResult<List<TodoList>> GetList()
 		{
 			var lists = _todoService.GetAllList();
-			if(lists==null || !lists.Any())
+			if (lists == null || !lists.Any())
 			{
 				return NoContent();
 			}
@@ -61,10 +75,10 @@ namespace TodoApp.Api.Controllers
 		}
 
 
-		[HttpDelete("api/todo/{id}")]
+		[HttpDelete("todo/{id}")]
 		public IActionResult DeletedList([FromRoute] Guid id)
 		{
-			if (id==Guid.Empty)
+			if (id == Guid.Empty)
 			{
 				return BadRequest("Invalid ID");
 			}

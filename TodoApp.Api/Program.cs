@@ -1,5 +1,4 @@
 
-using MiddleWare;
 using Todo.Application.Contracts;
 using Todo.Application.Services;
 
@@ -27,7 +26,7 @@ namespace TodoApp.Api
 				app.UseSwagger();
 				app.UseSwaggerUI();
 			}
-			app.UseMiddleware<ErrorHandlerMiddleware>();
+			app.UseMiddleware<ExceptionHandlerMiddleWare>();
 			app.UseHttpsRedirection();
 
 			app.UseAuthorization();

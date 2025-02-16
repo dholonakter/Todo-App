@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Todo.Application.Contracts;
 using ToDoApp.Domain.Entities;
 using ToDoApp.Domain.Enums;
@@ -13,25 +14,21 @@ namespace Todo.Application.Services;
 public class TodoService : ITodoService
 {
 
-	private List<TodoList> _todolist = new List<TodoList>()
-	{
-		new TodoList{ID=Guid.NewGuid(),Title="p"},
-		new TodoList {ID=Guid.NewGuid(),Title="px"}
-	};
+	private List<TodoList> _todolist = new List<TodoList>();
 	private List<Group> _grouplist = new List<Group>();
 
-	
 
-	public void CreateANewList(string Name)
+	public void CreateANewList(string name)
 	{
-		TodoList list = new TodoList { ID =Guid.NewGuid() , Title = Name };
-		_todolist.Add(list);
+
+		TodoList todoList = new TodoList { ID = Guid.NewGuid(), Title = name };
+		_todolist.Add(todoList);
 	}
 
 
-	public void CreateANewGroup(string Name)
+	public void CreateANewGroup(string name)
 	{
-		Group group = new Group { ID=Guid.NewGuid(), Name = Name };
+		Group group = new Group { ID = Guid.NewGuid(), Name = name };
 		_grouplist.Add(group);
 	}
 
@@ -59,7 +56,7 @@ public class TodoService : ITodoService
 		}
 		else
 		{
-			throw new Exception("Group with ID" + group_id + "not found");
+			throw new KeyNotFoundException("Group with ID" + group_id + "not found");
 
 		}
 
@@ -67,49 +64,61 @@ public class TodoService : ITodoService
 
 	public void AddTodoItemTotheList(Guid list_id, TodoItem todoItem)
 	{
+		if (todoItem == null)
+		{
+			throw new ArgumentNullException(nameof(todoItem), "TodoItem can not be null");
+
+		}
 		var found_todolist = _todolist.FirstOrDefault(x => x.ID == list_id);
 
 		if (found_todolist != null)
 		{
+			todoItem.ID = Guid.NewGuid();
 			found_todolist.Items.Add(todoItem);
 		}
 		else
 		{
-			throw new Exception("TodoList with ID" + list_id + "not found");
+			throw new KeyNotFoundException("TodoList with ID" + list_id + "not found");
 
 		}
 
 	}
-	public void UpdateTodoListName(Guid list_id, string title)
+	public void UpdateTodoList(Guid id, string name)
 	{
-		var found_todolist = _todolist.FirstOrDefault(x => x.ID == list_id);
+
+		var found_todolist = _todolist.FirstOrDefault(x => x.ID == id);
 
 		if (found_todolist != null)
 		{
-			found_todolist.Title = title;
+			found_todolist.Title = name;
 		}
 		else
 		{
-			throw new Exception("TodoList with ID" + list_id + "not found");
+			throw new KeyNotFoundException("TodoList with ID" + id + "not found");
 
 		}
 	}
-	public void UpdateItemtoList(Guid list_id, Guid item_Id, string itemName)
+	public void UpdateItemtoList(Guid list_id, TodoItem todoItem)
 	{
+		if (todoItem == null)
+		{
+			throw new ArgumentNullException(nameof(todoItem), "TodoItem can not be null");
+
+		}
 		var found_todolist = _todolist.FirstOrDefault(x => x.ID == list_id);
 
 		if (found_todolist != null)
 		{
-			var getItem = found_todolist.Items.Find(x => x.ID == item_Id);
+			var getItem = found_todolist.Items.Find(x => x.ID == todoItem.ID);
 			if (getItem != null)
 			{
-				getItem.Name = itemName;
+				getItem.Name = todoItem.Name;
 
 			}
 		}
 		else
 		{
-			throw new Exception("TodoList with ID" + list_id + "not found");
+			throw new KeyNotFoundException("TodoList with ID" + list_id + "not found");
 
 		}
 	}
@@ -123,15 +132,20 @@ public class TodoService : ITodoService
 		}
 		else
 		{
-			throw new Exception("TodoList with ID" + id + " not found");
+			throw new KeyNotFoundException("TodoList with ID" + id + " not found");
 		}
 	}
-	public void DeleteTodoItem(Guid list_id, Guid item_id)
+	public void DeleteTodoItem(Guid list_id, TodoItem todoItem)
 	{
+		if (todoItem == null)
+		{
+			throw new ArgumentNullException(nameof(todoItem), "TodoItem can not be null");
+
+		}
 		var found_todolist = _todolist.FirstOrDefault(x => x.ID == list_id);
 		if (found_todolist != null)
 		{
-			var getItem = found_todolist.Items.Find(x => x.ID == item_id);
+			var getItem = found_todolist.Items.Find(x => x.ID == todoItem.ID);
 			if (getItem != null)
 			{
 				found_todolist.Items.Remove(getItem);
@@ -141,7 +155,7 @@ public class TodoService : ITodoService
 		}
 		else
 		{
-			throw new Exception("TodoList with ID" + list_id + "not found");
+			throw new KeyNotFoundException("TodoList with ID" + list_id + "not found");
 
 		}
 
