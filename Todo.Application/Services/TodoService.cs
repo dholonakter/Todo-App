@@ -18,17 +18,16 @@ public class TodoService : ITodoService
 	private List<Group> _grouplist = new List<Group>();
 
 
-	public void CreateANewList(string name)
+	public void CreateANewList(TodoList todolist)
 	{
-
-		TodoList todoList = new TodoList { ID = Guid.NewGuid(), Title = name };
-		_todolist.Add(todoList);
+		todolist = new TodoList() { ID = Guid.NewGuid(), Title = todolist.Title };
+		_todolist.Add(todolist);
 	}
 
 
-	public void CreateANewGroup(string name)
+	public void CreateANewGroup(Group group)
 	{
-		Group group = new Group { ID = Guid.NewGuid(), Name = name };
+		group = new Group() { ID = Guid.NewGuid(), Name = group.Name };
 		_grouplist.Add(group);
 	}
 
@@ -83,18 +82,18 @@ public class TodoService : ITodoService
 		}
 
 	}
-	public void UpdateTodoList(Guid id, string name)
+	public void UpdateTodoList(TodoList todoList)
 	{
 
-		var found_todolist = _todolist.FirstOrDefault(x => x.ID == id);
+		var found_todolist = _todolist.FirstOrDefault(x => x.ID == todoList.ID);
 
 		if (found_todolist != null)
 		{
-			found_todolist.Title = name;
+			found_todolist = todoList;
 		}
 		else
 		{
-			throw new KeyNotFoundException("TodoList with ID" + id + "not found");
+			throw new KeyNotFoundException("TodoList with ID" + todoList.ID + "not found");
 
 		}
 	}
@@ -122,6 +121,19 @@ public class TodoService : ITodoService
 
 		}
 	}
+	public void UpdateGroup(Guid group_id, Group group)
+	{
+		var found_group = _grouplist.Find(x => x.ID == group_id);
+		if (found_group != null)
+		{
+			found_group.Name = group.Name;
+		}
+		else
+		{
+			throw new KeyNotFoundException("Group with ID" + group.ID + "not found");
+
+		}
+	}
 
 	public void DeleteTodoList(Guid id)
 	{
@@ -134,6 +146,30 @@ public class TodoService : ITodoService
 		{
 			throw new KeyNotFoundException("TodoList with ID" + id + " not found");
 		}
+	}
+	public void DeletedGroup(Guid group_id)
+	{
+		var check_group = _grouplist.Find(x => x.ID == group_id);
+		if (check_group != null)
+		{
+			var check_todo = check_group.TodoLists.Count() > 0;
+			if (!check_todo)
+			{
+				_grouplist.Remove(check_group);
+
+			}
+			else
+			{
+				throw new Exception("There is a list in the group");
+			}
+
+		}
+		else
+		{
+			throw new KeyNotFoundException("Group with ID" + group_id + " not found");
+		}
+
+
 	}
 	public void DeleteTodoItem(Guid list_id, TodoItem todoItem)
 	{
