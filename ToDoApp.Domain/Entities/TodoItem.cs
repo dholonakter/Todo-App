@@ -16,7 +16,10 @@ public class TodoItem
 	[StringLength(50)]
 	[Required(ErrorMessage ="Name can not be null")]
 	public required string Name { get; set; }
+	[Required]
+	public DateTime DueDate { get; set; }
 	public DateTime DateCreated { get; set; } = DateTime.Now;
+	public DateTime ModifiedAt { get; set; } = DateTime.Now;
 	public List<string>? Steps { get; set; }
 	public PriorityType? Priority { get; set; }
 	[DefaultValue(false)]
@@ -25,3 +28,4 @@ public class TodoItem
 	public bool IsImportant { get; set; }
 	public Guid TodoListId { get; set; }
 }
+

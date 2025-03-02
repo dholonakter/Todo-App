@@ -11,8 +11,10 @@ public class Group
 {
 	public Guid ID { get; set; }
 	[StringLength(50)]
-	[Required(ErrorMessage ="Name can not be null")]
+	[Required(ErrorMessage = "Name can not be null")]
 	public required string Name { get; set; }
+	public DateTime CreatedDate { get; set; } = DateTime.Now;
+	public DateTime ModifiedAt { get; set; } = DateTime.Now;
 	public List<TodoList> TodoLists { get; set; } = new();
 
 }

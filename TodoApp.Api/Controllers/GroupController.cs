@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Todo.Application.Contracts;
+using TodoApp.Api.DTO.Group;
 using ToDoApp.Domain.Entities;
 
 namespace TodoApp.Api.Controllers
@@ -35,9 +36,10 @@ namespace TodoApp.Api.Controllers
 		[HttpPost]
 		[ProducesResponseType(statusCode: StatusCodes.Status201Created)]
 		[ProducesResponseType(statusCode: StatusCodes.Status400BadRequest)]
-		public IActionResult PostNewGroup(Group group)
+		public IActionResult PostNewGroup(GetGroupDto group)
 		{
-			_todoService.CreateANewGroup(group);
+			var group_object = new Group { ID = Guid.NewGuid(), Name = group.Name };
+			_todoService.CreateANewGroup(group_object);
 			return Ok("Group created successfully.");
 		}
 
@@ -48,9 +50,10 @@ namespace TodoApp.Api.Controllers
 		/// <returns></returns>
 		[HttpPut("{group_id}")]
 		[ProducesResponseType(statusCode: StatusCodes.Status200OK)]
-		public IActionResult UpdateGroup([FromRoute]Guid group_id, [FromBody]Group group)
+		public IActionResult UpdateGroup([FromRoute] Guid group_id, [FromBody] UpdateGroupDto updategroup)
 		{
-			_todoService.UpdateGroup(group_id, group);
+			var group_object = new Group { Name = updategroup.Name };
+			_todoService.UpdateGroup(group_id, group_object);
 			return Ok("Updated successfully");
 		}
 
@@ -69,7 +72,13 @@ namespace TodoApp.Api.Controllers
 			{
 				return NoContent();
 			}
-			return Ok(group_list);
+			var result = group_list.Select(g => new GetGroupDto { Name = g.Name });
+			if (result == null || !result.Any())
+			{
+				return NoContent();
+
+			}
+			return Ok(result);
 		}
 
 		/// <summary>
