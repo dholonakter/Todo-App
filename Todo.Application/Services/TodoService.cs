@@ -18,17 +18,14 @@ public class TodoService : ITodoService
 	private List<Group> _grouplist = new List<Group>();
 
 
-	public void CreateANewList(string name)
+	public void CreateANewList(TodoList todolist)// should use CreatetodoInput?
 	{
-
-		TodoList todoList = new TodoList { ID = Guid.NewGuid(), Title = name };
-		_todolist.Add(todoList);
+		_todolist.Add(todolist);
 	}
 
 
-	public void CreateANewGroup(string name)
+	public void CreateANewGroup(Group group)
 	{
-		Group group = new Group { ID = Guid.NewGuid(), Name = name };
 		_grouplist.Add(group);
 	}
 
@@ -39,6 +36,19 @@ public class TodoService : ITodoService
 	public List<Group> GetAllGroups()
 	{
 		return _grouplist;
+	}
+
+	public List<TodoItem> GetAllItems(Guid list_id)
+	{
+		var list_object = _todolist.FirstOrDefault(x => x.ID == list_id);
+		if (list_object == null)
+		{
+			throw new KeyNotFoundException("List with ID" + list_id + " not found");
+
+		}
+		return list_object.Items;
+
+
 	}
 
 	public void AddListToAGroup(Guid group_id, Guid list_id)
@@ -56,7 +66,7 @@ public class TodoService : ITodoService
 		}
 		else
 		{
-			throw new KeyNotFoundException("Group with ID" + group_id + "not found");
+			throw new KeyNotFoundException("Group with ID" + group_id + " not found");
 
 		}
 
@@ -73,28 +83,31 @@ public class TodoService : ITodoService
 
 		if (found_todolist != null)
 		{
-			todoItem.ID = Guid.NewGuid();
 			found_todolist.Items.Add(todoItem);
 		}
 		else
 		{
-			throw new KeyNotFoundException("TodoList with ID" + list_id + "not found");
+			throw new KeyNotFoundException("TodoList with ID" + list_id + " not found");
 
 		}
 
 	}
-	public void UpdateTodoList(Guid id, string name)
+	public void UpdateTodoList(Guid Id, TodoList todoList)
 	{
 
-		var found_todolist = _todolist.FirstOrDefault(x => x.ID == id);
+		var find_object = _todolist.FirstOrDefault(x => x.ID == Id);
 
-		if (found_todolist != null)
+		if (find_object != null)
 		{
-			found_todolist.Title = name;
+			find_object.Title = todoList.Title;
+			find_object.IconPath = todoList.IconPath;
+			find_object.Theme = todoList.Theme;
+			find_object.UserName = todoList.UserName;
+
 		}
 		else
 		{
-			throw new KeyNotFoundException("TodoList with ID" + id + "not found");
+			throw new KeyNotFoundException("TodoList with ID" + todoList.ID + " not found");
 
 		}
 	}
@@ -113,12 +126,29 @@ public class TodoService : ITodoService
 			if (getItem != null)
 			{
 				getItem.Name = todoItem.Name;
+				getItem.IsImportant = todoItem.IsImportant;
+				getItem.IsCompleted = todoItem.IsCompleted;
+				getItem.Priority = todoItem.Priority;
+				getItem.Steps = todoItem.Steps;
 
 			}
 		}
 		else
 		{
 			throw new KeyNotFoundException("TodoList with ID" + list_id + "not found");
+
+		}
+	}
+	public void UpdateGroup(Guid group_id, Group group)
+	{
+		var found_group = _grouplist.Find(x => x.ID == group_id);
+		if (found_group != null)
+		{
+			found_group.Name = group.Name;
+		}
+		else
+		{
+			throw new KeyNotFoundException("Group with ID" + group.ID + " not found");
 
 		}
 	}
@@ -135,27 +165,50 @@ public class TodoService : ITodoService
 			throw new KeyNotFoundException("TodoList with ID" + id + " not found");
 		}
 	}
-	public void DeleteTodoItem(Guid list_id, TodoItem todoItem)
+	public void DeletedGroup(Guid group_id)
 	{
-		if (todoItem == null)
+		var check_group = _grouplist.Find(x => x.ID == group_id);
+		if (check_group != null)
 		{
-			throw new ArgumentNullException(nameof(todoItem), "TodoItem can not be null");
-
-		}
-		var found_todolist = _todolist.FirstOrDefault(x => x.ID == list_id);
-		if (found_todolist != null)
-		{
-			var getItem = found_todolist.Items.Find(x => x.ID == todoItem.ID);
-			if (getItem != null)
+			var check_todo = check_group.TodoLists.Count() > 0;
+			if (!check_todo)
 			{
-				found_todolist.Items.Remove(getItem);
+				_grouplist.Remove(check_group);
 
+			}
+			else
+			{
+				throw new Exception("There is a list in the group");
 			}
 
 		}
 		else
 		{
-			throw new KeyNotFoundException("TodoList with ID" + list_id + "not found");
+			throw new KeyNotFoundException("Group with ID" + group_id + " not found");
+		}
+
+
+	}
+	public void DeleteTodoItem(Guid list_id, Guid item_id)
+	{
+		var found_todolist = _todolist.FirstOrDefault(x => x.ID == list_id);
+		if (found_todolist != null)
+		{
+			var getItem = found_todolist.Items.Find(x => x.ID == item_id);
+			if (getItem != null)
+			{
+				found_todolist.Items.Remove(getItem);
+
+			}
+			else
+			{
+				throw new KeyNotFoundException("Item with ID" + item_id + " not found");
+
+			}
+		}
+		else
+		{
+			throw new KeyNotFoundException("TodoList with ID" + list_id + " not found");
 
 		}
 

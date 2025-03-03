@@ -9,9 +9,15 @@
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
   </ItemGroup>
+  
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Todo.Application\Todo.Application.csproj" />
   </ItemGroup>
 
 </Project>
+
