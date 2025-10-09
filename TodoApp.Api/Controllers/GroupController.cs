@@ -65,10 +65,10 @@ namespace TodoApp.Api.Controllers
 		[HttpGet]
 		[ProducesResponseType(statusCode: StatusCodes.Status200OK)]
 		[ProducesResponseType(statusCode: StatusCodes.Status204NoContent)]
-		public IActionResult GetGroup()
-		{
-			var group_list = _todoService.GetAllGroups();
-			if (group_list == null || !group_list.Any())
+		public IActionResult GetGroup() // Why not GetGroups?
+        {
+			var group_list = _todoService.GetAllGroups(); //What do you mean by getAll Groups? Naming convention is not clear. 
+            if (group_list == null || !group_list.Any())
 			{
 				return NoContent();
 			}
