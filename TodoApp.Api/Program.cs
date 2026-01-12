@@ -1,7 +1,9 @@
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Todo.Application.Contracts;
 using Todo.Application.Services;
+using TodoApp.Infrastructure.Data;
 
 namespace TodoApp.Api
 {
@@ -22,8 +24,10 @@ namespace TodoApp.Api
 				var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
 				options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFile));
 			});
+            builder.Services.AddDbContext<TodoDbContext>(options =>
+                      options.UseNpgsql(builder.Configuration.GetConnectionString("MyDB")));
 
-			var app = builder.Build();
+            var app = builder.Build();
 
 			// Configure the HTTP request pipeline.
 			if (app.Environment.IsDevelopment())

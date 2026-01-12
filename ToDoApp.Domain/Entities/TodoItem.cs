@@ -27,5 +27,6 @@ public class TodoItem
 	[DefaultValue(false)]
 	public bool IsImportant { get; set; }
 	public Guid TodoListId { get; set; }
+    public TodoList TodoList { get; set; }
 }
 
